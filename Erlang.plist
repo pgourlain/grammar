@@ -962,7 +962,80 @@
 				</dict>
 				<dict>
 					<key>begin</key>
-					<string>\b(fun)\s+(?!\()</string>
+					<string>\b(fun)\s+(_[a-zA-Z\d@_]++|[A-Z][a-zA-Z\d@_]*+)\s*+(?=\()</string>
+					<key>beginCaptures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>keyword.control.fun.erlang</string>
+						</dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>entity.name.function.erlang</string>
+						</dict>
+					</dict>
+					<key>comment</key>
+					<string>Named function expression</string>
+					<key>end</key>
+					<string>\b(end)\b</string>
+					<key>endCaptures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>keyword.control.end.erlang</string>
+						</dict>
+					</dict>
+					<key>name</key>
+					<string>meta.expression.fun.erlang</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>captures</key>
+							<dict>
+								<key>1</key>
+								<dict>
+									<key>name</key>
+									<string>entity.name.function.erlang</string>
+								</dict>
+							</dict>
+							<key>comment</key>
+							<string>Name of a named function expression clause</string>
+							<key>match</key>
+							<string>(_[a-zA-Z\d@_]++|[A-Z][a-zA-Z\d@_]*+)\s*+(?=\()</string>
+						</dict>
+						<dict>
+							<key>begin</key>
+							<string>(?=\()</string>
+							<key>end</key>
+							<string>(;)|(?=\bend\b)</string>
+							<key>endCaptures</key>
+							<dict>
+								<key>1</key>
+								<dict>
+									<key>name</key>
+									<string>punctuation.separator.clauses.erlang</string>
+								</dict>
+							</dict>
+							<key>patterns</key>
+							<array>
+								<dict>
+									<key>include</key>
+									<string>#internal-function-parts</string>
+								</dict>
+							</array>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#everything-else</string>
+						</dict>
+					</array>
+				</dict>
+				<dict>
+					<key>begin</key>
+					<string>\b(fun)\s+(?!\()(?=[^\n]*/)</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -995,7 +1068,7 @@
 				</dict>
 				<dict>
 					<key>begin</key>
-					<string>\b(fun)\s*+(\()(?=(\s*+\()|(\)))</string>
+					<string>\b(fun)\s*+(\()(?=(\s*+\()|(\)(?!\s*+-&gt;)))</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -1056,6 +1129,20 @@
 					<string>meta.expression.fun.erlang</string>
 					<key>patterns</key>
 					<array>
+						<dict>
+							<key>captures</key>
+							<dict>
+								<key>1</key>
+								<dict>
+									<key>name</key>
+									<string>entity.name.function.erlang</string>
+								</dict>
+							</dict>
+							<key>comment</key>
+							<string>Name of a named function expression clause</string>
+							<key>match</key>
+							<string>(_[a-zA-Z\d@_]++|[A-Z][a-zA-Z\d@_]*+)\s*+(?=\()</string>
+						</dict>
 						<dict>
 							<key>begin</key>
 							<string>(?=\()</string>
