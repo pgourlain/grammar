@@ -38,3 +38,38 @@ d() ->
 %     ^^^^^^^^^^ source.erlang meta.directive.erlang meta.function-call.erlang entity.name.function.erlang
 tail_guard(X) -> X.
 %<---------- source.erlang meta.function.erlang entity.name.function.definition.erlang
+
+%% Implicit fun with the arity on a later line stops at the `/`, it does not
+%% wait for an `end` that never comes.
+e() ->
+    fun tail_guard
+%   ^^^ source.erlang meta.function.erlang meta.expression.fun.erlang keyword.control.fun.erlang
+        /1.
+%       ^ source.erlang meta.function.erlang meta.expression.fun.erlang punctuation.separator.function-arity.erlang
+%        ^ source.erlang meta.function.erlang constant.numeric.integer.decimal.erlang
+
+f() -> ok.
+%<- source.erlang meta.function.erlang entity.name.function.definition.erlang
+
+%% The function type rule only applies where types are written, so these zero
+%% arity fun expressions stay expressions.
+g() -> fun() when true -> ok end.
+%      ^^^ source.erlang meta.function.erlang meta.expression.fun.erlang keyword.control.fun.erlang
+%                            ^^^ source.erlang meta.function.erlang meta.expression.fun.erlang keyword.control.end.erlang
+
+h() -> fun ((X)) -> X end.
+%      ^^^ source.erlang meta.function.erlang meta.expression.fun.erlang keyword.control.fun.erlang
+%                     ^^^ source.erlang meta.function.erlang meta.expression.fun.erlang keyword.control.end.erlang
+
+-define(ANONYMOUS, fun() -> ok end).
+%                  ^^^ source.erlang meta.directive.define.erlang meta.expression.fun.erlang keyword.control.fun.erlang
+
+%% Fun types keep their type scope wherever a type can be written.
+-type nested_fun() :: [fun(() -> ok)].
+%                      ^^^ source.erlang meta.directive.erlang meta.type.erlang meta.structure.list.erlang entity.name.function.erlang
+
+-record(r, {f :: fun()}).
+%                ^^^ source.erlang meta.directive.record.erlang meta.structure.record.erlang meta.type.erlang entity.name.function.erlang
+
+-callback cb() -> fun((a) -> b).
+%                 ^^^ source.erlang meta.directive.erlang meta.type.erlang entity.name.function.erlang
